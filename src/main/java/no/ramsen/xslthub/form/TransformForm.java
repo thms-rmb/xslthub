@@ -6,7 +6,6 @@ public class TransformForm {
     private SourceType sourceType;
     private String source;
     private String xsl;
-    private String result;
 
     public SourceType getSourceType() {
         return sourceType;
@@ -32,26 +31,17 @@ public class TransformForm {
         this.xsl = xsl;
     }
 
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public TransformForm(SourceType sourceType, String source, String xsl, String result) {
+    public TransformForm(SourceType sourceType, String source, String xsl) {
         this.sourceType = sourceType;
         this.source = source;
         this.xsl = xsl;
-        this.result = result;
     }
 
     public TransformForm(String source, String xsl) {
-        this(SourceType.XML, source, xsl, "");
+        this(SourceType.XML, source, xsl);
     }
 
     public TransformForm() {
-        this(SourceType.XML, "", "", "");
+        this(SourceType.XML, "", "");
     }
 }

@@ -8,43 +8,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+
+import java.util.Map;
 
 @Controller
 public class TransformController {
     private final TransformService transformService;
 
     @GetMapping("/transform")
-    public String transformGet(Model model) {
-        var defaultXml = """
-                <?xml version="1.0" encoding="UTF-8"?>
-                <collection xmlns="http://www.loc.gov/MARC21/slim">
-                    <record>
-                        <datafield tag="245" ind1=" " ind2=" ">
-                            <subfield code="a">The Way of Kings</subfield>
-                        </datafield>
-                    </record>
-                </collection>
-                """;
-        var defaultXsl = """
-                <xsl:stylesheet version="3.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-                  <xsl:mode on-no-match="shallow-copy" />
-                </xsl:stylesheet>
-                """;
-        /*var jsonXsl = """
-                <xsl:stylesheet version="3.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:array="http://www.w3.org/2005/xpath-functions/array">
-                <xsl:output indent="yes" />
-                  <xsl:template match=".">
-                    <xsl:sequence select="json-to-xml(serialize(., map{'method': 'json'}))" />
-                  </xsl:template>
-                </xsl:stylesheet>
-                """;*/
-        model.addAttribute("transformForm", new TransformForm(defaultXml, defaultXsl));
-
-        return "transform";
-    }
-
-    @PostMapping("/transform")
-    public String transformPost(@ModelAttribute TransformForm transformForm, Model model) {
+    public String transformGet(
+            @ModelAttribute TransformForm transformForm,
+            Model model,
+            @RequestHeader Map<String, String> headers
+    ) {
         String result;
         try {
             result = switch (transformForm.getSourceType()) {
@@ -54,11 +31,15 @@ public class TransformController {
         } catch (SaxonApiException e) {
             result = e.getMessage();
         }
-        transformForm.setResult(result);
 
+        model.addAttribute("result", result);
         model.addAttribute("transformForm", transformForm);
 
-        return "transform :: [#result]";
+        if (headers.getOrDefault("hx-request", "false").equals("true")) {
+            return "transform :: [#result]";
+        } else {
+            return "transform";
+        }
     }
 
     public TransformController(TransformService transformService) {

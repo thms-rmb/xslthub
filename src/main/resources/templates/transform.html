@@ -18,13 +18,22 @@
 <div class="container py-4">
     <div class="bg-white rounded-3 border p-5">
         <h2>Inputs</h2>
+        <ul>
+            <li>
+                <a href="/transform?sourceType=XML&source=%3C%3Fxml%20version%3D%221.0%22%20encoding%3D%22UTF-8%22%3F%3E%0A%3Ccollection%20xmlns%3D%22http%3A%2F%2Fwww.loc.gov%2FMARC21%2Fslim%22%3E%0A%20%20%20%20%3Crecord%3E%0A%20%20%20%20%20%20%20%20%3Cdatafield%20tag%3D%22245%22%20ind1%3D%22%20%22%20ind2%3D%22%20%22%3E%0A%20%20%20%20%20%20%20%20%20%20%20%20%3Csubfield%20code%3D%22a%22%3EThe%20Way%20of%20Kings%3C%2Fsubfield%3E%0A%20%20%20%20%20%20%20%20%3C%2Fdatafield%3E%0A%20%20%20%20%3C%2Frecord%3E%0A%3C%2Fcollection%3E&xsl=%3Cxsl%3Astylesheet%20version%3D%223.0%22%20xmlns%3Axsl%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2FXSL%2FTransform%22%3E%0A%20%20%3Cxsl%3Amode%20on-no-match%3D%22shallow-copy%22%20%2F%3E%0A%3C%2Fxsl%3Astylesheet%3E">Simple example with a MARCXML record</a>
+            </li>
+            <li>
+                <a href="/transform?sourceType=JSON&source=%5B%22foo%22%2C%20%22bar%22%2C%20true%2C%20%7B%22zim%22%3A%20%22zam%22%7D%5D&xsl=%3Cxsl%3Astylesheet%20version%3D%223.0%22%20xmlns%3Axsl%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2FXSL%2FTransform%22%20xmlns%3Aarray%3D%22http%3A%2F%2Fwww.w3.org%2F2005%2Fxpath-functions%2Farray%22%3E%0A%3Cxsl%3Aoutput%20indent%3D%22yes%22%20%2F%3E%0A%20%20%3Cxsl%3Atemplate%20match%3D%22.%22%3E%0A%20%20%20%20%3Cxsl%3Asequence%20select%3D%22json-to-xml(serialize(.%2C%20map%7B%27method%27%3A%20%27json%27%7D))%22%20%2F%3E%0A%20%20%3C%2Fxsl%3Atemplate%3E%0A%3C%2Fxsl%3Astylesheet%3E">Transforming JSON</a>
+            </li>
+        </ul>
         <form action="#"
-              method="post"
-              th:attr="hx-post=@{/transform}"
+              method="get"
+              th:attr="hx-get=@{/transform}"
               th:object="${transformForm}"
               hx-target="#result"
-              hx-trigger="load,input delay:500ms"
-              hx-swap="outerHTML">
+              hx-trigger="input delay:500ms"
+              hx-swap="outerHTML"
+              hx-push-url="true">
             <div class="mb-3">
                 <label for="sourceType" class="form-label">Source Type</label>
                 <select th:field="*{sourceType}" class="form-select">
@@ -43,8 +52,11 @@
             </div>
         </form>
         <h2>Output</h2>
-        <pre id="result"><code th:text="${transformForm.result}"></code></pre>
+        <pre id="result"><code th:text="${result}"></code></pre>
     </div>
 </div>
+<script>
+    htmx.trigger("form", "submit");
+</script>
 </body>
 </html>
