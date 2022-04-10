@@ -1,1 +1,1 @@
-web: java -jar target/xslthub-0.0.1-SNAPSHOT.jar
+web: java -jar target/xslthub-0.0.1-SNAPSHOT.jar --server.port=$PORT --server.address=0.0.0.0
