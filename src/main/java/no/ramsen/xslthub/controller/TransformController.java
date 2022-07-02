@@ -22,11 +22,13 @@ public class TransformController {
             Model model,
             @RequestHeader Map<String, String> headers
     ) {
+        var source = transformForm.getSource();
+        var xsl = transformForm.getXsl();
         String result;
         try {
             result = switch (transformForm.getSourceType()) {
-                case XML -> transformService.transformXML(transformForm.getSource(), transformForm.getXsl());
-                case JSON -> transformService.transformJSON(transformForm.getSource(), transformForm.getXsl());
+                case XML -> transformService.transformXML(source, xsl);
+                case JSON -> transformService.transformJSON(source, xsl);
             };
         } catch (SaxonApiException e) {
             result = e.getMessage();
