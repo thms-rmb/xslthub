@@ -1,0 +1,29 @@
+plugins {
+  id "java"
+  id "org.springframework.boot" version "3.5.5"
+  id "io.spring.dependency-management" version "1.1.7"
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
+}
+
+group = "no.ramsen"
+version = "0.0.1-SNAPSHOT"
+description = "XSL Transformations in the Browser"
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation "org.springframework.boot:spring-boot-starter"
+  implementation "org.springframework.boot:spring-boot-starter-thymeleaf"
+  implementation "org.springframework.boot:spring-boot-starter-web"
+  runtimeOnly "org.springframework.boot:spring-boot-devtools"
+  implementation "net.sf.saxon:Saxon-HE:12.8"
+  implementation "org.webjars.npm:htmx.org:2.0.6"
+  implementation "org.webjars.npm:bootstrap:5.3.7"
+  implementation "org.webjars.npm:alpinejs:3.14.9"
+}
